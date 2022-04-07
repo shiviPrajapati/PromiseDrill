@@ -13,17 +13,7 @@ const path = require('path')
 
 
 function fileRead(file) {
-    return new Promise((res, rej) => {
-        fs.readFile(file, (err, data) => {
-            if (!err) {
-                res("file readed!")
-                //res(data)
-            }
-            else {
-                rej(err)
-            }
-        })
-    })
+    return data = fs.promises.readFile(file, 'utf-8')
 }
 
 
@@ -31,28 +21,17 @@ function fileRead(file) {
 
 function convertToUpperCase(readfile, writefile) {
     return new Promise((res, rej) => {
-        fs.readFile(readfile, (err, data) => {
-            if (!err) {
-                fs.writeFile(writefile, data.toString().toUpperCase(), (err) => {
-                    if (!err) {
+        data = fs.promises.readFile(readfile, 'utf-8')
+            .then((data) => {
+                fs.promises.writeFile(writefile, data.toString().toUpperCase())
+                    .then(() => {
                         res("Data converted to upperCase!")
-                        // res(data.toString().toUpperCase())
-                        fs.writeFile('./test/filenames.txt', writefile.toString() + '\n', function (err) {
-                            if (err) {
-                                console.log(err);
-                            }
-                            console.log("uppercase file name saved.");
-                        });
-                    }
-                    else {
-                        rej(err)
-                    }
-                })
-            }
-            else {
-                console.log(err)
-            }
-        })
+                        fs.promises.writeFile('./test/filenames.txt', writefile.toString() + '\n')
+                            .then((res) => console.log("uppercase file name saved."))
+                            .catch((err) => console.log(err))
+                    })
+                    .catch((err) => rej(err))
+            })
     })
 }
 
@@ -61,28 +40,19 @@ function convertToUpperCase(readfile, writefile) {
 
 function splitIntoSentences(readfile, writefile) {
     return new Promise((res, rej) => {
-        fs.readFile(readfile, (err, data) => {
-            if (!err) {
+        data = fs.promises.readFile(readfile)
+            .then((data) => {
                 let dataInLower = data.toString().toLowerCase();
                 splitData = dataInLower.split(".").join("\n");
-                fs.writeFile(writefile, splitData, 'utf-8', (err) => {
-                    if (!err) {
+                fs.promises.writeFile(writefile, splitData, 'utf-8')
+                    .then(() => {
                         res("Data converted to Sentences!")
-                        // res(splitData)
-                        fs.appendFile('./test/filenames.txt', writefile.toString() + '\n', function (err) {
-                            if (err) console.log(err);
-                            console.log("split file name saved.")
-                        });
-                    }
-                    else {
-                        rej(err)
-                    }
-                })
-            }
-            else {
-                console.log(err)
-            }
-        })
+                        fs.promises.appendFile('./test/filenames.txt', writefile.toString() + '\n')
+                            .then(() => console.log("split file name saved."))
+                            .catch((err) => console.log(err))
+                    })
+                    .catch((err) => rej(err))
+            })
     })
 }
 
@@ -91,28 +61,19 @@ function splitIntoSentences(readfile, writefile) {
 
 function sortData(fileread, filewrite) {
     return new Promise((res, rej) => {
-        fs.readFile(fileread, (err, data) => {
-            if (!err) {
+        data = fs.promises.readFile(fileread)
+            .then((data) => {
                 data = data.toString();
                 let sortdata = data.split('\n').sort().join('\n');
-                fs.writeFile(filewrite, sortdata, 'utf-8', (err) => {
-                    if (!err) {
+                fs.promises.writeFile(filewrite, sortdata, 'utf-8')
+                    .then(() => {
                         res("Data is Sorted!")
-                        // res(sortdata)
-                        fs.appendFile('./test/filenames.txt', filewrite.toString() + '\n', function (err) {
-                            if (err) console.log(err);
-                            console.log("sort file name saved.")
-                        });
-                    }
-                    else {
-                        rej(err)
-                    }
-                })
-            }
-            else {
-                console.log(err)
-            }
-        })
+                        fs.promises.appendFile('./test/filenames.txt', filewrite.toString() + '\n')
+                            .then(() => console.log("sort file name saved."))
+                            .catch((err) => console.log(err))
+                    })
+                    .catch((err) => rej(err))
+            })
     })
 }
 
@@ -121,25 +82,15 @@ function sortData(fileread, filewrite) {
 
 function deleteFile(readfile) {
     return new Promise((res, rej) => {
-        fs.readFile(readfile, (err, data) => {
-            if (!err) {
+        data = fs.promises.readFile(readfile)
+            .then((data) => {
                 fileNameArray = data.toString().trim().split("\n")
                 fileNameArray.forEach(data => {
-                    fs.unlink(data, () => {
-                        if (!err) {
-                            res("All file deleted!")
-                            // res("deleted")
-                        }
-                        else {
-                            rej(err)
-                        }
-                    })
-                });
-            }
-            else {
-                console.log(err)
-            }
-        })
+                    fs.promises.unlink(data)
+                        .then(() => res("All file deleted!"))
+                        .catch((err) => rej(err))
+                })
+            })
     })
 }
 

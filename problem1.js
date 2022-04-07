@@ -11,42 +11,27 @@ const path = require('path');
 
 function createDir(Path) {
     return new Promise((res, rej) => {
-        fs.mkdir(Path, (err) => {
-            if (!err) {
-                res("directory created!")
-            }
-            else {
-                rej(err)
-            }
-        })
+        fs.promises.mkdir(Path)
+        .then(() => res("directory created!"))
+        .catch((err) => rej(err))
     })
 }
 
 
 function createFile(filepath, data){
     return new Promise((res, rej) => {
-        fs.writeFile(filepath, data, 'utf-8', (data,err) => {
-            if(!err){
-                res(filepath) 
-            }
-            else{
-                rej(err)
-            }
-        })
+        fs.promises.writeFile(filepath, data, 'utf-8')
+        .then(() => res(filepath) )       
+        .catch((err) => rej(err))
     })
 }
 
 
 function deleteFile(filepath){
     return new Promise((res, rej) => {
-        fs.unlink(filepath, (err) => {
-            if(!err){
-                res(filepath)
-            }
-            else{
-                rej(err)
-            }
-        })
+        fs.promises.unlink(filepath)
+        .then(() => res(filepath))
+        .catch((err) => rej(err))
     })
 }
 
