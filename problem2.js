@@ -13,68 +13,55 @@ const path = require('path')
 
 
 function fileRead(file) {
-    return data = fs.promises.readFile(file, 'utf-8')
+    return fs.promises.readFile(file, 'utf-8')
 }
 
 
 
 
-function convertToUpperCase(readfile, writefile) {
-    return new Promise((res, rej) => {
-        data = fs.promises.readFile(readfile, 'utf-8')
-            .then((data) => {
-                fs.promises.writeFile(writefile, data.toString().toUpperCase())
-                    .then(() => {
-                        res("Data converted to upperCase!")
-                        fs.promises.writeFile('./test/filenames.txt', writefile.toString() + '\n')
-                            .then((res) => console.log("uppercase file name saved."))
-                            .catch((err) => console.log(err))
-                    })
-                    .catch((err) => rej(err))
-            })
-    })
+async function convertToUpperCase(readfile, writefile) {
+    data = fs.promises.readFile(readfile, 'utf-8')
+    return fs.promises.writeFile(writefile, data.toString())
+        .then(() => {
+            console.log("Data converted to upperCase!")
+            fs.promises.writeFile('./test/filenames.txt', writefile.toString() + '\n')
+                .then(() => console.log("uppercase file name saved."))
+                .catch((err) => console.log(err))
+        })
 }
 
 
 
 
-function splitIntoSentences(readfile, writefile) {
-    return new Promise((res, rej) => {
-        data = fs.promises.readFile(readfile)
-            .then((data) => {
-                let dataInLower = data.toString().toLowerCase();
-                splitData = dataInLower.split(".").join("\n");
-                fs.promises.writeFile(writefile, splitData, 'utf-8')
-                    .then(() => {
-                        res("Data converted to Sentences!")
-                        fs.promises.appendFile('./test/filenames.txt', writefile.toString() + '\n')
-                            .then(() => console.log("split file name saved."))
-                            .catch((err) => console.log(err))
-                    })
-                    .catch((err) => rej(err))
-            })
-    })
+async function splitIntoSentences(readfile, writefile) {
+    data = fs.promises.readFile(readfile)
+    let dataInLower = data.toString().toLowerCase();
+    splitData = dataInLower.split(".").join("\n");
+    return fs.promises.writeFile(writefile, splitData, 'utf-8')
+        .then(() => {
+            console.log("Data converted to Sentences!")
+            fs.promises.appendFile('./test/filenames.txt', writefile.toString() + '\n')
+                .then(() => console.log("split file name saved."))
+                .catch((err) => console.log(err))
+        })
+        .catch((err) => console.log(err))
 }
 
 
 
 
-function sortData(fileread, filewrite) {
-    return new Promise((res, rej) => {
-        data = fs.promises.readFile(fileread)
-            .then((data) => {
-                data = data.toString();
-                let sortdata = data.split('\n').sort().join('\n');
-                fs.promises.writeFile(filewrite, sortdata, 'utf-8')
-                    .then(() => {
-                        res("Data is Sorted!")
-                        fs.promises.appendFile('./test/filenames.txt', filewrite.toString() + '\n')
-                            .then(() => console.log("sort file name saved."))
-                            .catch((err) => console.log(err))
-                    })
-                    .catch((err) => rej(err))
-            })
-    })
+async function sortData(fileread, filewrite) {
+    data = fs.promises.readFile(fileread)
+    data = data.toString();
+    let sortdata = data.split('\n').sort().join('\n');
+    return fs.promises.writeFile(filewrite, sortdata, 'utf-8')
+        .then(() => {
+            console.log("Data is Sorted!")
+            fs.promises.appendFile('./test/filenames.txt', filewrite.toString() + '\n')
+                .then(() => console.log("sort file name saved."))
+                .catch((err) => console.log(err))
+        })
+        .catch((err) => console.log(err))
 }
 
 
@@ -86,9 +73,9 @@ function deleteFile(readfile) {
             .then((data) => {
                 fileNameArray = data.toString().trim().split("\n")
                 fileNameArray.forEach(data => {
-                    fs.promises.unlink(data)
-                        .then(() => res("All file deleted!"))
-                        .catch((err) => rej(err))
+                    return fs.promises.unlink(data)
+                        .then(() => console.log("All file deleted!"))
+                        .catch((err) => console.log(err))
                 })
             })
     })
