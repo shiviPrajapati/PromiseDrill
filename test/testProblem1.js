@@ -4,17 +4,14 @@ const path =require('path')
 function createAndDelete(dir, filepath) {
     let Path = path.join(__dirname, dir);
 
-    test.createDir(Path).then((res) => {
-        console.log(res)
-        test.createFile(filepath, "hello")
-            .then((res) => {
-                console.log("file created: ", res)
-                test.deleteFile(filepath)
-                    .then((res) => {
-                        console.log("file deleted: ", res)
-                    })
-            })
-    }).catch((rej) => {
+    test.createDir(Path)
+    .then(() => {
+        return test.createFile(filepath, "hello")
+    })
+    .then(() => {
+        return test.deleteFile(filepath)
+    })
+    .catch((rej) => {
         console.log(rej)
     })
 }
